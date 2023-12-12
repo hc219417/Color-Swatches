@@ -1,0 +1,13 @@
+/**
+ *   @file: dnode.temp
+ * @author: Hannah Culver
+ *   @date: March 17, 2022
+ *  @brief: implementation file for the dnode class
+ */
+
+template <class T>
+dnode<T>::dnode(T d, dnode* p, dnode* n){
+    data_field = d;
+    prev_field = p;
+    next_field = n;
+}

@@ -1,0 +1,32 @@
+/**
+ *   @file: node_iterator.temp
+ * @author: Hannah Culver
+ *   @date: March 17, 2022
+ *  @brief: template file for the node_iterator class
+ */
+
+template <class T>
+node_iterator<T> node_iterator<T>::operator ++(){
+    current = current -> next();
+    return *this;
+}
+
+template <class T>
+node_iterator<T> node_iterator<T>::operator ++(int){
+    node_iterator<T> original(*this);
+    current = current -> next();
+    return original;
+}
+
+template <class T>
+node_iterator<T> node_iterator<T>::operator --(){
+    current = current -> prev();
+    return *this;
+}
+
+template <class T>
+node_iterator<T> node_iterator<T>::operator --(int){
+    node_iterator<T> original(*this);
+    current = current -> prev();
+    return original;
+}

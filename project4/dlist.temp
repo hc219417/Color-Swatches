@@ -1,0 +1,181 @@
+/**
+ *   @file: dlist.temp
+ * @author: Hannah Culver
+ *   @date: March 17, 2022
+ *  @brief: template file for the dlist class
+ */
+
+#include <iostream>
+using namespace std;
+
+template <class T>
+dlist<T>::~dlist(){
+    dnode<T>* rmptr;
+    while(head != NULL){
+        rmptr = head;
+        head = head -> next();
+        delete rmptr;
+    }
+    tail = NULL;
+}
+
+template <class T>
+dlist<T>::dlist(const dlist<T>& other){
+    if(other.head == NULL){
+        head = tail = NULL;
+        return;
+    }
+    else{
+        dnode<T>* src;
+        head = new dnode<T>(other.head -> data());
+        src = other.head -> next();
+        tail = head;
+        while(src != NULL){
+            tail -> set_next(new dnode<T>(src -> data(),tail));
+            src = src -> next();
+            tail = tail -> next();
+        }
+    }
+}
+
+template <class T>
+dlist<T>& dlist<T>::operator = (const dlist<T>& other){
+    if(this == &other){
+        return *this;
+    }
+    dnode<T>* rmptr;
+    while(head != NULL){
+        rmptr = head;
+        head = head -> next();
+        delete rmptr;
+    }
+    tail = NULL;
+    if(other.head == NULL){
+        head = tail = NULL;
+        exit(0); //return
+    }
+    else{
+        dnode<T>* src;
+        head = new dnode<T>(other.head -> data());
+        src = other.head -> next();
+        tail = head;
+        while(src != NULL){
+            tail -> set_next(new dnode<T>(src -> data(),tail));
+            src = src -> next();
+            tail = tail -> next();
+        }
+    }
+    return *this;
+}
+
+template <class T>
+void dlist<T>::front_insert(const T& item){
+    if(head == NULL){
+        head = tail = new dnode<T>(item);
+    }
+    else if(head -> next() == NULL){
+        head = new dnode<T>(item,NULL,tail);
+        tail -> set_prev(head);
+    }
+    else{
+        dnode<T>* tmp = head;
+        head = new dnode<T>(item,NULL,tmp);
+        tmp -> set_prev(head);
+    }
+}
+
+template <class T>
+void dlist<T>::rear_insert(const T& item){
+    if(head == NULL){
+        head = tail = new dnode<T>(item);
+    }
+    else{
+        tail -> set_next(new dnode<T>(item,tail));
+        tail = tail -> next();
+    }
+}
+
+template <class T>
+void dlist<T>::front_remove(){
+    if(head == NULL) return;
+    else if(head -> next() == NULL){
+        head = tail = NULL;
+    }
+    else{
+        head = head -> next();
+        head -> set_prev(NULL);
+    }
+}
+
+template <class T>
+void dlist<T>::rear_remove(){
+    if(head == NULL) return;
+    else if(head -> next() == NULL){
+        head = tail = NULL;
+    }
+    else{
+        tail = tail -> prev();
+        tail -> set_next(NULL);
+    }
+}
+
+template <class T>
+void dlist<T>::insert_before(iterator it, const T& item){
+    if(head == NULL || head -> next() == NULL || it.current == NULL){
+        front_insert(item);
+    }
+    else{
+        dnode<T>* tmp = new dnode<T>(item,it.current -> prev(),it.current);
+        it.current -> prev() -> set_next(tmp);
+        it.current -> set_prev(tmp);
+    }
+}
+
+template <class T>
+void dlist<T>::insert_after(iterator it, const T& item){
+    if(head == NULL || head -> next() == NULL || it.current == NULL){
+        rear_insert(item);
+    }
+    else{
+        dnode<T>* tmp = new dnode<T>(item,it.current,it.current -> next());
+        it.current -> next() -> set_prev(tmp);
+        it.current -> set_next(tmp);
+    }
+}
+
+template <class T>
+void dlist<T>::remove(iterator it){
+    if(head == NULL || it.current == NULL) return;
+    else if(head -> next() == NULL) head = tail = NULL;
+    else{
+        if(it.current == head) head = head -> next();
+        else if(it.current == tail) tail = tail -> prev();
+        else{
+            it.current -> prev() -> set_next(it.current -> next());
+            it.current -> next() -> set_prev(it.current -> prev());
+        }
+    }
+}
+
+template <class T>
+int dlist<T>::size(){
+    int count = 0;
+    for(dnode<T>* cursor = head; cursor != NULL; cursor = cursor -> next()){
+        count++;
+    }
+    return count;
+}
+
+template <class T>
+void dlist<T>::show(){
+    for(dnode<T>* cursor = head; cursor != NULL; cursor = cursor -> next()){
+        cout << cursor -> data() << endl;
+    }
+}
+
+template <class T>
+void dlist<T>::reverse_show(){
+    for(dnode<T>* cursor = tail; cursor != NULL; cursor = cursor -> prev()){
+        cout << cursor -> data() << endl;
+    }
+}
